@@ -529,17 +529,39 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    /* Certifications Horizontal Slider Scroll logic */
+    /* Certifications Horizontal Slider Scroll logic & Dynamic Graying / Disabled State */
     const certTrack = document.getElementById('certifications-track');
     const certPrevBtn = document.getElementById('cert-scroll-prev');
     const certNextBtn = document.getElementById('cert-scroll-next');
 
     if (certTrack && certPrevBtn && certNextBtn) {
+        function updateScrollButtons() {
+            const scrollLeft = certTrack.scrollLeft;
+            const maxScrollLeft = certTrack.scrollWidth - certTrack.clientWidth;
+            
+            if (scrollLeft <= 8) {
+                certPrevBtn.classList.add('disabled');
+            } else {
+                certPrevBtn.classList.remove('disabled');
+            }
+
+            if (scrollLeft >= maxScrollLeft - 8) {
+                certNextBtn.classList.add('disabled');
+            } else {
+                certNextBtn.classList.remove('disabled');
+            }
+        }
+
         certNextBtn.addEventListener('click', () => {
             certTrack.scrollBy({ left: 460, behavior: 'smooth' });
         });
         certPrevBtn.addEventListener('click', () => {
             certTrack.scrollBy({ left: -460, behavior: 'smooth' });
         });
+
+        certTrack.addEventListener('scroll', updateScrollButtons);
+        window.addEventListener('resize', updateScrollButtons);
+        setTimeout(updateScrollButtons, 300);
+        updateScrollButtons();
     }
 });
